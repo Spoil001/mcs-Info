@@ -1,4 +1,11 @@
-# Android N Quick Settings Codelab
+# Horrible Hack based on the Android N Quick Settings Codelab
+
+root-app that adds a quick settings tile to toggle charging.
+can be usefull for battery mods.
+
+will at some unspecified time in the future get a battery listener with a configurable polling intervall.
+
+---
 
 This folder contains the source code for a [Google I/O 2016 codelab on Android N Quick Settings](https://codelabs.developers.google.com/codelabs/android-n-quick-settings/#0).
 
