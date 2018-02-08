@@ -20,10 +20,32 @@ import android.os.Build;
 import android.service.quicksettings.TileService;
 import android.util.Log;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import static java.lang.Runtime.*;
+
+
+import android.content.SharedPreferences;
+import android.graphics.drawable.Icon;
+import android.service.quicksettings.Tile;
+
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Locale;
+
+
 @SuppressLint("Override")
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickSettingsService
    extends android.service.quicksettings.TileService {
+
+    private static final String SERVICE_STATUS_FLAG = "serviceStatus";
+    private static final String PREFERENCES_KEY = "com.google.android_quick_settings";
 
 
     /**
@@ -32,7 +54,7 @@ public class QuickSettingsService
      */
     @Override
     public void onTileAdded() {
-        Log.d("QS", "Tile added");
+        updateTile();
     }
 
     /**
@@ -40,7 +62,8 @@ public class QuickSettingsService
      */
     @Override
     public void onStartListening() {
-        Log.d("QS", "Start listening");
+        updateTile();
+
     }
 
     /**
@@ -49,22 +72,245 @@ public class QuickSettingsService
 
     @Override
     public void onClick() {
-        Log.d("QS", "Tile tapped");
-    }
 
-    /**
+        //switch state
+        switchState();
+
+        // updateTile(); will be called asynchronously
+    }
+/*
+    *//**
      * Called when this tile moves out of the listening state.
-     */
+     *//*
     @Override
     public void onStopListening() {
         Log.d("QS", "Stop Listening");
-    }
+        //do nothing
+    }*/
 
     /**
      * Called when the user removes this tile from Quick Settings.
      */
     @Override
     public void onTileRemoved() {
-        Log.d("QS", "Tile removed");
+        Log.d("QS", "Tile removed, charging enabled");
+        //enable charging
+        enableCharging();
     }
+
+
+    private void switchState(){
+        boolean state = getServiceStatus();
+
+        if (state){
+            //disable charging
+            disableCharging();
+        } else {
+            //enable charging
+            enableCharging();
+        }
+
+        //https://stackoverflow.com/questions/8369718/sleep-function-in-android-program
+        //wait one second, then update the tile
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+
+            private void runOnUiThread(Runnable runnable) {
+                updateTile();
+            }
+        }).start();
+
+
+    }
+
+
+    private void enableCharging(){
+        setChargingState(true);
+    }
+
+    private void disableCharging(){
+        setChargingState(false);
+    }
+
+    /*private void setChargingState2(boolean enableCharging){
+        //doesn't work
+        byte value = 1;
+
+        if (enableCharging){
+            Log.d("QS", "Setting charging status: enabled");
+            value = 1;
+
+        } else {
+            Log.d("QS", "Setting charging status: disabled");
+            value = 0;
+        }
+
+        try {
+            getRuntime().exec("su");
+
+            File outfile;
+
+            try {
+                outfile=new File("/sys/class/power_supply/battery/charging_enabled");
+
+                if(outfile.exists()){
+                    OutputStream os = new FileOutputStream(outfile);
+                    os.write(value);
+                    os.flush();
+                    os.close();
+
+                }
+            } catch (Exception e) {
+                Log.e("QS", "Could't write charging status");
+                Log.e("QS", e.toString());
+            }
+
+        } catch (IOException e) {
+            Log.d("QS", "Requesting root didn't work");
+        }
+
+    }
+*/
+
+    private void setChargingState(boolean enableCharging){
+        //https://gist.github.com/rosterloh/c4bd02bed8c5e7bd47c5
+
+        int value = 1;
+
+
+        if (enableCharging){
+            Log.d("QS", "Setting charging status: enabled");
+            value = 1;
+
+        } else {
+            Log.d("QS", "Setting charging status: disabled");
+            value = 0;
+        }
+        String command = String.format("echo %d > /sys/class/power_supply/battery/charging_enabled", value);
+
+
+        try {
+            String[] test = new String[] {"su", "-c", command};
+            Runtime.getRuntime().exec(test);
+
+
+        } catch (IOException e) {
+
+            Log.e("QS", "Setting charging status didn't work", e);
+
+        }
+
+    }
+
+    // Changes the appearance of the tile.
+    private void updateTile() {
+
+        Tile tile = this.getQsTile();
+        boolean isActive = getServiceStatus();
+
+        Icon newIcon;
+        String newLabel;
+        int newState;
+
+        // Change the tile to match the service status.
+        if (isActive) {
+
+            newLabel = String.format(Locale.US,
+                    "%s %s",
+                    getString(R.string.tile_label),
+                    getString(R.string.service_active));
+
+            newIcon = Icon.createWithResource(getApplicationContext(),
+                    R.drawable.battery_charging_60);
+
+            newState = Tile.STATE_ACTIVE;
+
+        } else {
+            newLabel = String.format(Locale.US,
+                    "%s %s",
+                    getString(R.string.tile_label),
+                    getString(R.string.service_inactive));
+            newIcon = Icon.createWithResource(getApplicationContext(),
+                    R.drawable.battery_60);
+
+           /* newIcon =
+                    Icon.createWithResource(getApplicationContext(),
+                           android.R.drawable.ic_lock_idle_low_battery);*/
+
+            newState = Tile.STATE_INACTIVE;
+        }
+
+        // Change the UI of the tile.
+        tile.setLabel(newLabel);
+        tile.setIcon(newIcon);
+        tile.setState(newState);
+
+        // Need to call updateTile for the tile to pick up changes.
+        tile.updateTile();
+    }
+
+
+    private boolean getServiceStatus() {
+
+        SharedPreferences prefs =
+                getApplicationContext()
+                        .getSharedPreferences(PREFERENCES_KEY, MODE_PRIVATE);
+
+        //boolean isActive = prefs.getBoolean(SERVICE_STATUS_FLAG, false);
+
+        Log.d("QS", "requesting root");
+        boolean isActive = false;
+        try {
+            getRuntime().exec("su");
+
+            File infile;
+            FileInputStream inputStream;
+            byte[] buffer = null;
+            try {
+                infile=new File("/sys/class/power_supply/battery/charging_enabled");
+
+                if(infile.exists()){
+                    InputStream is = new FileInputStream(infile);
+                    byte[] b = new byte[is.available()];
+                    is.read(b);
+                    String fileContent = new String(b);
+                    is.close();
+
+                    //Log.d("QS", fileContent);
+                    if (fileContent.startsWith("1")){
+                        Log.d("QS", "charging is activated");
+                        isActive = true;
+                    } else {
+                        Log.d("QS", "charging is not activated");
+                        isActive = false;
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("QS", "Could't read charging status", e);
+            }
+
+        } catch (IOException e) {
+            Log.e("QS", "Requesting root didn't work", e);
+        }
+
+        //not needed, yet
+        prefs.edit().putBoolean(SERVICE_STATUS_FLAG, isActive).apply();
+
+        return isActive;
+    }
+
+
 }

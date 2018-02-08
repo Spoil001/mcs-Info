@@ -18,10 +18,7 @@ android {
             versionName "1.0-start"
         }
 
-        completed {
-            applicationId "com.google.android_quick_settings.completed"
-            versionName "1.0-completed"
-        }
+
     }
 
     buildTypes {
@@ -35,9 +32,7 @@ android {
         start {
             java.srcDirs = ['src/main/java', 'src/start/java', 'src/start/java/']
         }
-        completed {
-            java.srcDirs = ['src/main/java', 'src/completed/java', 'src/completed/java/']
-        }
+
     }
 }
 
