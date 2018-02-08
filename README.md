@@ -3,7 +3,11 @@
 root-app that adds a quick settings tile to toggle charging.
 can be usefull for battery mods.
 
-will at some unspecified time in the future get a battery listener with a configurable polling intervall.
+will at some unspecified time in the future get a battery listener with a configurable polling interval.
+
+Ideas:
+* https://stackoverflow.com/questions/24532934/checking-battery-level-in-the-background-with-a-service?rq=1
+* https://developer.android.com/training/monitoring-device-state/battery-monitoring.html
 
 ---
 
