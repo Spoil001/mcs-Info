@@ -17,11 +17,14 @@
 
 <resources>
     <string name="app_name">Efficiency mode :)</string>
-    <string name="tile_label">Charging</string>
+    <string name="tile_label">mcs</string>
     <string name="app_greeting">
         Please add the switch_charging_mode Tile to your Quick-Settings.
         If switching modes doesn\'t work, please check if the app was granted <b>root</b>-access.
     </string>
+
+    <string name="mcs_active">mcs active</string>
+    <string name="mcs_inactive">mcs inactive</string>
 
     <string name="service_active">enabled</string>
     <string name="service_inactive">disabled</string>

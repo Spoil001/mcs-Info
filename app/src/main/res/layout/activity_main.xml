@@ -28,4 +28,17 @@
     <TextView
         style="@style/BodyFont"
         android:text="@string/app_greeting" />
+
+    <TextView
+        android:id="@+id/mcsInfo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp"
+        android:text="mcs -i"
+        android:textAlignment="textStart" />
+
+
+
 </RelativeLayout>

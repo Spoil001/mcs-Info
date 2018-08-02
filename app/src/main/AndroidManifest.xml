@@ -45,7 +45,8 @@
             </intent-filter>
         </service>
 
-        <!-- TileService for "Launch a dialog from a tile" section -->
+        <!--
+        &lt;!&ndash; TileService for "Launch a dialog from a tile" section &ndash;&gt;
 
         <service
             android:name=".QSDialogService"
@@ -58,7 +59,7 @@
             </intent-filter>
         </service>
 
-        <!-- TileService for "Launch an activity from a tile" section -->
+        &lt;!&ndash; TileService for "Launch an activity from a tile" section &ndash;&gt;
 
         <service
             android:name=".QSIntentService"
@@ -69,7 +70,7 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
 
             </intent-filter>
-        </service>
+        </service>-->
 
         <activity
             android:name=".ResultActivity"
