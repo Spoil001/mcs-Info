@@ -1,9 +1,16 @@
-# Horrible Hack based on the Android N Quick Settings Codelab
+# MCS Info, or Horrible Hack based on the Android N Quick Settings Codelab
+(mostly relevant for Moto Z... users)
 
-root-app that adds a quick settings tile to toggle charging.
-can be usefull for battery mods.
+I'm using mcs for "efficency-mode"
+https://github.com/Magisk-Modules-Repo/Magic-Charging-Switch
 
-might at some unspecified time in the future get a battery listener with a configurable polling interval.
+This is a small app to make using it more pleasant.
+It has a main-view that will show the battery and service status of mcs.
+And a tile to toggle the mcs-state. (charging vs. mcs active)
+
+This tile will also show the charge of my Incipio Battery Mod when its connected.
+
+
 
 Ideas:
 * https://stackoverflow.com/questions/24532934/checking-battery-level-in-the-background-with-a-service?rq=1
@@ -13,11 +20,8 @@ Ideas:
 
 This folder contains the source code for a [Google I/O 2016 codelab on Android N Quick Settings](https://codelabs.developers.google.com/codelabs/android-n-quick-settings/#0).
 
-## Demo
 
-![Demo of Quick Settings tile in tutorial](https://github.com/googlecodelabs/android-n-quick-settings/blob/master/extras/demo.gif?raw=true)
-
-### License
+### License of Android N Quick Settings Codelab
 
 ```
 Copyright 2016 Google, Inc.
