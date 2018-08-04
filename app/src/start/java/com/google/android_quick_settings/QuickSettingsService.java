@@ -49,7 +49,7 @@ public class QuickSettingsService
 
     private static final String SERVICE_STATUS_FLAG = "serviceStatus";
     private static final String PREFERENCES_KEY = "com.google.android_quick_settings";
-    private Shell.Container container;
+    protected Shell.Container container;
 
     @Override
     public void onCreate() {

@@ -16,7 +16,7 @@
 -->
 
 <resources>
-    <string name="app_name">Efficiency mode :)</string>
+    <string name="app_name">MCS Info</string>
     <string name="tile_label">mcs</string>
     <string name="app_greeting">
         Please add the switch_charging_mode Tile to your Quick-Settings.

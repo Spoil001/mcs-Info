@@ -27,32 +27,33 @@ public class MainActivity extends AppCompatActivity {
     private Shell.Container container;
     private Thread thread = new Thread() {
         @Override
-    public void run() {
-        try {
-            while (!thread.isInterrupted()) {
-                Thread.sleep(1000);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // update TextView here!
-                        doSomething();
-                    }
-                });
+        public void run() {
+            try {
+                while (!thread.isInterrupted()) {
+                    Thread.sleep(1000);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // update TextView here!
+                            printMCSInfo();
+                        }
+                    });
+                }
+            } catch (InterruptedException e) {
             }
-        } catch (InterruptedException e) {
         }
-    }
     };
 
+    //currently not used
     private View.OnClickListener awesomeOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            doSomething();
+            printMCSInfo();
         }
     };
 
 
-        @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Assign the container with a pre-configured Container
@@ -60,16 +61,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         TextView textView = (TextView) findViewById(R.id.mcsInfo);
         //textView.setOnClickListener(awesomeOnClickListener);
+        printMCSInfo();
         thread.start();
+
 
     }
 
-    protected void doSomething(){
+    protected void printMCSInfo() {
         List<String> output = Shell.su("mcs -i").exec().getOut();
 
         TextView textView = (TextView) findViewById(R.id.mcsInfo);
         textView.setText("");
-        for(String tmp:output){
+        for (String tmp : output) {
             textView.append(tmp + "\n");
         }
 
@@ -78,6 +81,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRestart() {
         super.onRestart();
-        doSomething();
+        printMCSInfo();
     }
 }
