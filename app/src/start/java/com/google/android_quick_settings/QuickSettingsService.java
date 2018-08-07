@@ -89,8 +89,8 @@ public class QuickSettingsService
 
         // updateTile(); will be called asynchronously
     }
-/*
-    *//**
+    /*
+     *//**
      * Called when this tile moves out of the listening state.
      *//*
     @Override
@@ -104,7 +104,7 @@ public class QuickSettingsService
      */
     @Override
     public void onTileRemoved() {
-        Log.d("QS", "Tile removed, charging enabled");
+        Log.d("QS", "Tile removed, mcs enabled");
         //enable mcs
         enableMcs();
     }
@@ -170,7 +170,7 @@ public class QuickSettingsService
     }
 
     /**
-     * @return -1 on error
+     * @return NULL on error
      */
     public Integer getModCapacity() {
         List<String> output = Shell.su("cat /sys/class/power_supply/gb_battery/capacity").exec().getOut();
@@ -186,6 +186,33 @@ public class QuickSettingsService
                 return charge;
             } catch (java.lang.NumberFormatException e) {
                 Log.e("QS", "getModCapacity failed", e);
+                //nothing
+            }
+        }
+        return null;
+    }
+
+    /**
+     * true, when the mod is charging the battery
+     *
+     * @return NULL on error
+     */
+    public Boolean getModChargingState() {
+        List<String> output = Shell.su("cat /sys/class/power_supply/gb_battery/current_now").exec().getOut();
+        for (String tmp : output) {
+            if (tmp.contains("No such file or directory")) {
+                Log.e("QS", "No battery-mod connected");
+                continue;
+            }
+
+            try {
+                int current = Integer.parseInt(tmp);
+                Log.d("QS", "Mod Current: " + current);
+                if (current < 0) {
+                    return true;
+                }
+            } catch (java.lang.NumberFormatException e) {
+                Log.e("QS", "getModChargingState failed", e);
                 //nothing
             }
         }
@@ -281,6 +308,10 @@ public class QuickSettingsService
         String newLabel;
         int newState;
         Integer capacity = getModCapacity();
+
+        //fallback
+        newIcon = Icon.createWithResource(getApplicationContext(),
+                R.drawable.battery_alert);
         // Change the tile to match the service status.
         if (isActive) {
             if (capacity != null) {
@@ -288,20 +319,82 @@ public class QuickSettingsService
                         "%s - %d%%",
                         getString(R.string.mcs_active),
                         capacity);
+                //TODO: if charging, show charging
+                if (Boolean.FALSE.equals(getModChargingState())) {
+
+                    if (capacity <= 14) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_10);
+                    } else if (capacity <= 24) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_20);
+                    } else if (capacity <= 34) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_30);
+                    } else if (capacity <= 44) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_40);
+                    } else if (capacity <= 54) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_50);
+                    } else if (capacity <= 64) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_60);
+                    } else if (capacity <= 74) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_70);
+                    } else if (capacity <= 84) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_80);
+                    } else if (capacity <= 94) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_90);
+                    } else {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_full);
+                    }
+                } else {
+                    if (capacity <= 14) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_charging_10);
+                    } else if (capacity <= 24) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_charging_20);
+                    } else if (capacity <= 34) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_charging_30);
+                    } else if (capacity <= 44) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_charging_40);
+                    } else if (capacity <= 54) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_charging_50);
+                    } else if (capacity <= 64) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_charging_60);
+                    } else if (capacity <= 74) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_charging_70);
+                    } else if (capacity <= 84) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_charging_80);
+                    } else if (capacity <= 94) {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_charging_90);
+                    } else {
+                        newIcon = Icon.createWithResource(getApplicationContext(),
+                                R.drawable.battery_charging_100);
+                    }
+                }
             } else {
                 newLabel = String.format(Locale.US,
                         "%s",
                         getString(R.string.mcs_active));
             }
 
-
-            newIcon = Icon.createWithResource(getApplicationContext(),
-                    R.drawable.battery_60);
-
             newState = Tile.STATE_ACTIVE;
 
         } else {
-
             if (capacity != null) {
                 newLabel = String.format(Locale.US,
                         "%s - %d%%",
@@ -315,8 +408,8 @@ public class QuickSettingsService
                 );
             }
 
-            newIcon = Icon.createWithResource(getApplicationContext(),
-                    R.drawable.battery_charging_60);
+  //          newIcon = Icon.createWithResource(getApplicationContext(),
+  //                  R.drawable.battery_alert);
 
            /* newIcon =
                     Icon.createWithResource(getApplicationContext(),
