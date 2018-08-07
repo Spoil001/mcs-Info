@@ -210,6 +210,8 @@ public class QuickSettingsService
                 Log.d("QS", "Mod Current: " + current);
                 if (current < 0) {
                     return true;
+                } else {
+                    return false;
                 }
             } catch (java.lang.NumberFormatException e) {
                 Log.e("QS", "getModChargingState failed", e);
@@ -219,53 +221,6 @@ public class QuickSettingsService
         return null;
     }
 
-//    private void enableCharging(){
-//        setChargingState(true);
-//    }
-
-//    private void disableCharging(){
-//        setChargingState(false);
-//    }
-
-    /*private void setChargingState2(boolean enableCharging){
-        //doesn't work
-        byte value = 1;
-
-        if (enableCharging){
-            Log.d("QS", "Setting charging status: enabled");
-            value = 1;
-
-        } else {
-            Log.d("QS", "Setting charging status: disabled");
-            value = 0;
-        }
-
-        try {
-            getRuntime().exec("su");
-
-            File outfile;
-
-            try {
-                outfile=new File("/sys/class/power_supply/battery/charging_enabled");
-
-                if(outfile.exists()){
-                    OutputStream os = new FileOutputStream(outfile);
-                    os.write(value);
-                    os.flush();
-                    os.close();
-
-                }
-            } catch (Exception e) {
-                Log.e("QS", "Could't write charging status");
-                Log.e("QS", e.toString());
-            }
-
-        } catch (IOException e) {
-            Log.d("QS", "Requesting root didn't work");
-        }
-
-    }
-*/
 
     private void setChargingState(boolean enableCharging) {
         //https://gist.github.com/rosterloh/c4bd02bed8c5e7bd47c5
@@ -308,10 +263,10 @@ public class QuickSettingsService
         String newLabel;
         int newState;
         Integer capacity = getModCapacity();
-
-        //fallback
         newIcon = Icon.createWithResource(getApplicationContext(),
                 R.drawable.battery_alert);
+        Boolean charging = Boolean.FALSE.equals(getModChargingState());
+
         // Change the tile to match the service status.
         if (isActive) {
             if (capacity != null) {
@@ -319,73 +274,7 @@ public class QuickSettingsService
                         "%s - %d%%",
                         getString(R.string.mcs_active),
                         capacity);
-                //TODO: if charging, show charging
-                if (Boolean.FALSE.equals(getModChargingState())) {
 
-                    if (capacity <= 14) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_10);
-                    } else if (capacity <= 24) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_20);
-                    } else if (capacity <= 34) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_30);
-                    } else if (capacity <= 44) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_40);
-                    } else if (capacity <= 54) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_50);
-                    } else if (capacity <= 64) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_60);
-                    } else if (capacity <= 74) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_70);
-                    } else if (capacity <= 84) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_80);
-                    } else if (capacity <= 94) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_90);
-                    } else {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_full);
-                    }
-                } else {
-                    if (capacity <= 14) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_charging_10);
-                    } else if (capacity <= 24) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_charging_20);
-                    } else if (capacity <= 34) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_charging_30);
-                    } else if (capacity <= 44) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_charging_40);
-                    } else if (capacity <= 54) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_charging_50);
-                    } else if (capacity <= 64) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_charging_60);
-                    } else if (capacity <= 74) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_charging_70);
-                    } else if (capacity <= 84) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_charging_80);
-                    } else if (capacity <= 94) {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_charging_90);
-                    } else {
-                        newIcon = Icon.createWithResource(getApplicationContext(),
-                                R.drawable.battery_charging_100);
-                    }
-                }
             } else {
                 newLabel = String.format(Locale.US,
                         "%s",
@@ -407,16 +296,74 @@ public class QuickSettingsService
                         getString(R.string.mcs_inactive)
                 );
             }
-
-  //          newIcon = Icon.createWithResource(getApplicationContext(),
-  //                  R.drawable.battery_alert);
-
-           /* newIcon =
-                    Icon.createWithResource(getApplicationContext(),
-                           android.R.drawable.ic_lock_idle_low_battery);*/
-
             newState = Tile.STATE_INACTIVE;
-            //   newState = Tile.STATE_ACTIVE;
+        }
+
+        if (charging && capacity != null) {
+
+            if (capacity <= 14) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_10);
+            } else if (capacity <= 24) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_20);
+            } else if (capacity <= 34) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_30);
+            } else if (capacity <= 44) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_40);
+            } else if (capacity <= 54) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_50);
+            } else if (capacity <= 64) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_60);
+            } else if (capacity <= 74) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_70);
+            } else if (capacity <= 84) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_80);
+            } else if (capacity <= 94) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_90);
+            } else {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_full);
+            }
+        } else if (capacity != null) {
+            if (capacity <= 14) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_charging_10);
+            } else if (capacity <= 24) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_charging_20);
+            } else if (capacity <= 34) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_charging_30);
+            } else if (capacity <= 44) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_charging_40);
+            } else if (capacity <= 54) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_charging_50);
+            } else if (capacity <= 64) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_charging_60);
+            } else if (capacity <= 74) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_charging_70);
+            } else if (capacity <= 84) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_charging_80);
+            } else if (capacity <= 94) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_charging_90);
+            } else if (capacity <= 104) {
+                newIcon = Icon.createWithResource(getApplicationContext(),
+                        R.drawable.battery_charging_100);
+            }
         }
 
         // Change the UI of the tile.
@@ -427,56 +374,5 @@ public class QuickSettingsService
         // Need to call updateTile for the tile to pick up changes.
         tile.updateTile();
     }
-
-
-//    private boolean getServiceStatus() {
-//
-//        SharedPreferences prefs =
-//                getApplicationContext()
-//                        .getSharedPreferences(PREFERENCES_KEY, MODE_PRIVATE);
-//
-//        //boolean isActive = prefs.getBoolean(SERVICE_STATUS_FLAG, false);
-//
-//        Log.d("QS", "requesting root");
-//        boolean isActive = false;
-//        try {
-//            getRuntime().exec("su");
-//
-//            File infile;
-//            FileInputStream inputStream;
-//            byte[] buffer = null;
-//            try {
-//                infile=new File("/sys/class/power_supply/battery/charging_enabled");
-//
-//                if(infile.exists()){
-//                    InputStream is = new FileInputStream(infile);
-//                    byte[] b = new byte[is.available()];
-//                    is.read(b);
-//                    String fileContent = new String(b);
-//                    is.close();
-//
-//                    //Log.d("QS", fileContent);
-//                    if (fileContent.startsWith("1")){
-//                        Log.d("QS", "charging is activated");
-//                        isActive = true;
-//                    } else {
-//                        Log.d("QS", "charging is not activated");
-//                        isActive = false;
-//                    }
-//                }
-//            } catch (Exception e) {
-//                Log.e("QS", "Could't read charging status", e);
-//            }
-//
-//        } catch (IOException e) {
-//            Log.e("QS", "Requesting root didn't work", e);
-//        }
-//
-//        //not needed, yet
-//        prefs.edit().putBoolean(SERVICE_STATUS_FLAG, isActive).apply();
-//
-//        return isActive;
-//    }
-
 
 }
