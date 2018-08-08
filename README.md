@@ -28,6 +28,10 @@ Long pressing the tile will open the main app.
 * tile: show whether the mod is charging the battery
 * tile: long press to open main app
 
+## Needs
+* mcs installed https://github.com/Magisk-Modules-Repo/Magic-Charging-Switch
+* root
+
 ## Screenshots:
 ![mcsInfo-main](screenshots/mcsInfo-main.png)
 ![screenshots/mcsInfo-noMod](screenshots/mcsInfo-noMod.png)
