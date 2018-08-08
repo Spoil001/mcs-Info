@@ -1,18 +1,42 @@
 # MCS Info, or Horrible Hack based on the Android N Quick Settings Codelab
+
 (mostly relevant for Moto Z... users)
 
 I'm using mcs for "efficency-mode"
+In the default settings mcs will charge the battery if its lower than 80% and only up to 90% charge.
+
 https://github.com/Magisk-Modules-Repo/Magic-Charging-Switch
 
 This is a small app to make using it more pleasant.
+
 It has a main-view that will show the battery and service status of mcs.
-And a tile to toggle the mcs-state. (charging vs. mcs active)
 
-This tile will also show the charge of my Incipio Battery Mod when its connected.
+And a tile to toggle the mcs-state. 
 
+* normal tile means that mcs is active
+* tile greyed out means that normal charging is enabled
 
+This tile will also show the charge of my Incipio Battery Mod when its connected. 
+When the mod is charging the battery the icon will change accordingly.
 
-Ideas:
+Long pressing the tile will open the main app.
+
+## Features
+* show MCS and Battery Info
+* tile: toggle mcs-active / charging
+* tile: show mod charge
+* tile: show whether the mod is charging the battery
+* tile: long press to open main app
+
+## Screenshots:
+![mcsInfo-main](screenshots/mcsInfo-main.png)
+![screenshots/mcsInfo-noMod](screenshots/mcsInfo-noMod.png)
+![mcsInfo-modChargingBattery](screenshots/mcsInfo-modChargingBattery.png)
+
+## Bugs
+* Will crash when no root access is given (I will probably never fix that)
+
+## Ideas:
 * https://stackoverflow.com/questions/24532934/checking-battery-level-in-the-background-with-a-service?rq=1
 * https://developer.android.com/training/monitoring-device-state/battery-monitoring.html
 
