@@ -5,7 +5,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "com.google.android_quick_settings"
+        applicationId "de.tr0llhoehle.mcs_info"
         minSdkVersion 24
         targetSdkVersion 25
         versionCode 1
@@ -16,7 +16,7 @@ android {
     productFlavors {
         mcsInfo {
             dimension "foo"
-            applicationId "com.google.android_quick_settings.start"
+            applicationId "de.tr0llhoehle.mcs_info.start"
             versionName "1.0-mcsInfo"
             minSdkVersion 25
             targetSdkVersion 25
@@ -40,6 +40,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.0.0-alpha2'
+    compile 'com.android.support:appcompat-v7:25.4.0'
     implementation 'com.github.topjohnwu:libsu:2.0.0'
 }

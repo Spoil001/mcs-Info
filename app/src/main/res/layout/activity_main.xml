@@ -23,7 +23,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.google.android_quick_settings.MainActivity">
+    tools:context="com.google.android_quick_settings.com.google.mcs_info.MainActivity">
 
     <TextView
         style="@style/BodyFont"

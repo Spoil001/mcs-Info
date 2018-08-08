@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.android_quick_settings;
+package de.tr0llhoehle.mcs_info;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import de.tr0llhoehle.mcs_info.R;
 import com.topjohnwu.superuser.Shell;
 
 import java.util.List;
@@ -57,7 +58,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Assign the container with a pre-configured Container
-        container = Shell.Config.newContainer();
+        if(container == null) {
+            container = Shell.Config.newContainer();
+        }
         setContentView(R.layout.activity_main);
         TextView textView = (TextView) findViewById(R.id.mcsInfo);
         //textView.setOnClickListener(awesomeOnClickListener);

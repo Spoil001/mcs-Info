@@ -16,7 +16,7 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.android_quick_settings">
+    package="de.tr0llhoehle.mcs_info">
 
     <application
         android:allowBackup="true"
@@ -24,7 +24,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="de.tr0llhoehle.mcs_info.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,7 +37,7 @@
 
         <service
             android:name=".QuickSettingsService"
-            android:icon="@drawable/battery_charging_60"
+            android:icon="@drawable/battery_alert"
             android:label="@string/tile_label"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
@@ -73,7 +73,7 @@
         </service>-->
 
         <activity
-            android:name=".ResultActivity"
+            android:name="de.tr0llhoehle.mcs_info.ResultActivity"
             android:label="@string/result_label"/>
     </application>
 

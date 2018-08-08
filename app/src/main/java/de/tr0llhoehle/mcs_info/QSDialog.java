@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.android_quick_settings;
+package de.tr0llhoehle.mcs_info;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,6 +21,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+
+import de.tr0llhoehle.mcs_info.R;
 
 public class QSDialog
     extends DialogFragment {

@@ -12,32 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.android_quick_settings;
+package de.tr0llhoehle.mcs_info;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.service.quicksettings.TileService;
 import android.util.Log;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
-import static java.lang.Runtime.*;
-
-
-import android.content.SharedPreferences;
 import android.graphics.drawable.Icon;
 import android.service.quicksettings.Tile;
 
 
 import com.topjohnwu.superuser.Shell;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,7 +44,9 @@ public class QuickSettingsService
     public void onCreate() {
         super.onCreate();
         // Assign the container with a pre-configured Container
-        container = Shell.Config.newContainer();
+        if(container == null) {
+            container = Shell.Config.newContainer();
+        }
     }
 
     /**
@@ -198,6 +189,7 @@ public class QuickSettingsService
      * @return NULL on error
      */
     public Boolean getModChargingState() {
+        //might want to use /sys/class/power_supply/battery/battery_charging_enabled or charging_enabled
         List<String> output = Shell.su("cat /sys/class/power_supply/gb_battery/current_now").exec().getOut();
         for (String tmp : output) {
             if (tmp.contains("No such file or directory")) {
