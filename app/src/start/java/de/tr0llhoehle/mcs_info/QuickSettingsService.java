@@ -44,7 +44,7 @@ public class QuickSettingsService
     public void onCreate() {
         super.onCreate();
         // Assign the container with a pre-configured Container
-        if(container == null) {
+        if (container == null) {
             container = Shell.Config.newContainer();
         }
     }
@@ -136,11 +136,24 @@ public class QuickSettingsService
 
     }
 
+    /**
+     * @return true, when battery is getting charged
+     */
+    private boolean isBatteryGettingChargedMCS() {
+        List<String> output = Shell.su("mcs -i").exec().getOut();
+        for (String tmp : output) {
+            if (tmp.contains("POWER_SUPPLY_STATUS=Charging")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean mcsActive() {
         // List<String> output = Shell.su("find /dev/block -iname boot").exec().getOut();
         List<String> output = Shell.su("mcs -i").exec().getOut();
         for (String tmp : output) {
-            if (tmp.contains("pause_svc=false")) {
+            if (tmp.contains("pauseDaemon=false")) {
                 return true;
             }
         }
@@ -213,7 +226,8 @@ public class QuickSettingsService
         return null;
     }
 
-
+    //this method is old and should not be used
+    @Deprecated
     private void setChargingState(boolean enableCharging) {
         //https://gist.github.com/rosterloh/c4bd02bed8c5e7bd47c5
 
@@ -257,7 +271,8 @@ public class QuickSettingsService
         Integer capacity = getModCapacity();
         newIcon = Icon.createWithResource(getApplicationContext(),
                 R.drawable.battery_alert);
-        Boolean charging = Boolean.FALSE.equals(getModChargingState());
+        //Boolean charging = Boolean.FALSE.equals(getModChargingState()); //old using current of mod
+        Boolean charging = isBatteryGettingChargedMCS();
 
         // Change the tile to match the service status.
         if (isActive) {
@@ -291,7 +306,11 @@ public class QuickSettingsService
             newState = Tile.STATE_INACTIVE;
         }
 
-        if (charging && capacity != null) {
+        if (charging && capacity == null) {
+            newIcon = Icon.createWithResource(getApplicationContext(),
+                    R.drawable.battery_charging_outline);
+
+        } else if (!charging && capacity != null) {
 
             if (capacity <= 14) {
                 newIcon = Icon.createWithResource(getApplicationContext(),

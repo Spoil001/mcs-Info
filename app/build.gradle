@@ -17,7 +17,7 @@ android {
         mcsInfo {
             dimension "foo"
             applicationId "de.tr0llhoehle.mcs_info.start"
-            versionName "1.0-mcsInfo"
+            versionName "2018-08-08-mcsInfo"
             minSdkVersion 25
             targetSdkVersion 25
             versionCode 1

@@ -24,18 +24,20 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.google.android_quick_settings.com.google.mcs_info.MainActivity">
-
-    <TextView
-        style="@style/BodyFont"
-        android:text="@string/app_greeting" />
-
+    <!--
+        <TextView
+            style="@style/BodyFont"
+            android:text="@string/app_greeting"
+             />
+        -->
     <TextView
         android:id="@+id/mcsInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="100dp"
+        android:scrollIndicators="right"
+        android:scrollbars = "vertical"
         android:text="mcs -i"
         android:textAlignment="textStart" />
 
