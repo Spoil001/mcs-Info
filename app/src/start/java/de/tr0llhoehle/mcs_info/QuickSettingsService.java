@@ -97,17 +97,17 @@ public class QuickSettingsService
     public void onTileRemoved() {
         Log.d("QS", "Tile removed, mcs enabled");
         //enable mcs
-        enableMcs();
+        enableAcc();
     }
 
 
     private void switchState() {
         //boolean state = getServiceStatus();
         if (mcsActive()) {
-            enableCharging();
+            disableAcc();
 
         } else {
-            enableMcs();
+            enableAcc();
         }
 
         //https://stackoverflow.com/questions/8369718/sleep-function-in-android-program
@@ -140,9 +140,9 @@ public class QuickSettingsService
      * @return true, when battery is getting charged
      */
     private boolean isBatteryGettingChargedMCS() {
-        List<String> output = Shell.su("mcs -i").exec().getOut();
+        List<String> output = Shell.su("acc -i").exec().getOut();
         for (String tmp : output) {
-            if (tmp.contains("POWER_SUPPLY_STATUS=Charging")) {
+            if (tmp.contains("STATUS=Charging")) {
                 return true;
             }
         }
@@ -151,26 +151,26 @@ public class QuickSettingsService
 
     public boolean mcsActive() {
         // List<String> output = Shell.su("find /dev/block -iname boot").exec().getOut();
-        List<String> output = Shell.su("mcs -i").exec().getOut();
+        List<String> output = Shell.su("acc -D").exec().getOut();
         for (String tmp : output) {
-            if (tmp.contains("pauseDaemon=false")) {
+            if (tmp.contains("accd is running")) {
                 return true;
             }
         }
         return false;
     }
 
-    public void enableCharging() {
+    public void disableAcc() {
         //mcs -e
-        Log.d("QS", "Enable Charging called");
-        List<String> output = Shell.su("mcs -e").exec().getOut();
+        Log.d("QS", "Disable enableAcc called");
+        List<String> output = Shell.su("acc -D stop").exec().getOut();
     }
 
 
-    public void enableMcs() {
+    public void enableAcc() {
         //mcs -s
-        List<String> output = Shell.su("mcs -s").exec().getOut();
-        Log.d("QS", "Enable MCS called");
+        List<String> output = Shell.su("acc -D start").exec().getOut();
+        Log.d("QS", "Enable enableAcc called");
     }
 
     /**

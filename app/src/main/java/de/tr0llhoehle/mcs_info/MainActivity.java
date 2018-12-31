@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void printMCSInfo() {
-        List<String> output = Shell.su("mcs -i").exec().getOut();
+        List<String> output = Shell.su("acc -i").exec().getOut();
 
         TextView textView = (TextView) findViewById(R.id.mcsInfo);
         textView.setText("");

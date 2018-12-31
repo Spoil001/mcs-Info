@@ -1,19 +1,22 @@
-# MCS Info, or Horrible Hack based on the Android N Quick Settings Codelab
+# Advanced Charging Controller (acc) Info
+## Former MCS Info, or Horrible Hack based on the Android N Quick Settings Codelab
 
 (mostly relevant for Moto Z... users)
 
-I'm using mcs for "efficency-mode"
-In the default settings mcs will charge the battery if its lower than 80% and only up to 90% charge.
+I'm using acc for "efficency-mode"
+In the default settings acc will charge the battery if its lower than 80% and only up to 90% charge.
 
 https://github.com/Magisk-Modules-Repo/Magic-Charging-Switch
 
+https://forum.xda-developers.com/apps/magisk/module-magic-charging-switch-cs-v2017-9-t3668427
+
 This is a small app to make using it more pleasant.
 
-It has a main-view that will show the battery and service status of mcs.
+It has a main-view that will show the battery and service status of acc.
 
-And a tile to toggle the mcs-state. 
+And a tile to toggle the daemon-state. 
 
-* normal tile means that mcs is active
+* normal tile means that acc is active
 * tile greyed out means that normal charging is enabled
 
 This tile will also show the charge of my Incipio Battery Mod when its connected. 
@@ -23,13 +26,13 @@ Long pressing the tile will open the main app.
 
 ## Features
 * show MCS and Battery Info
-* tile: toggle mcs-active / charging
+* tile: toggle acc-enabled / disabled
 * tile: show mod charge
 * tile: show whether the mod is charging the battery
 * tile: long press to open main app
 
 ## Needs
-* mcs installed https://github.com/Magisk-Modules-Repo/Magic-Charging-Switch
+* acc installed https://github.com/Magisk-Modules-Repo/Magic-Charging-Switch
 * root
 
 ## Screenshots:
